@@ -1,10 +1,12 @@
+#!/usr/bin/python3
+# -*- coding: UTF-8 -*-
 import tornado.ioloop
 import tornado.web
 import sys
 import tornado.autoreload
 # sys.path.append('D:\\wwwroot\\py\\proj')
 # from videoDemo import videoDemo 
-from Vinfo import Vinfo 
+from controller.Vinfo  import Vinfo 
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):

@@ -1,4 +1,6 @@
-from GoogleTranslator import GoogleTranslator
+import sys
+sys.path.append('..')
+from commone.GoogleTranslator import GoogleTranslator
 import time
 from Dbobj import Dbobj 
 import pymongo

@@ -6,7 +6,9 @@ from multiprocessing import Pool,Process
 import time
 import pymongo
 import math
-from GoogleTranslator import GoogleTranslator
+import sys
+sys.path.append('..')
+from commone.GoogleTranslator import GoogleTranslator
 
 def trans(g,text):
     e = g.translate(text)

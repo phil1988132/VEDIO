@@ -10,7 +10,8 @@ import datetime
 import json
 from googletrans import Translator
 import os
-from Dbobj import Dbobj 
+from commone.Dbobj import Dbobj 
+from commone.GoogleTranslator import GoogleTranslator
 
 class videoDemo:
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36"}
@@ -91,23 +92,69 @@ class videoDemo:
     #抓取图片
     def imgFunc(self, path,dict):
         checkSource = otherSource = []
+        kList = ['setThumbUrl','setThumbUrl169']
         for k,v in dict.items():
             #if k == 'setThumbUrl' and v.strip() != '':
-            if k == 'setThumbUrl' and len(v)>0:
+            if k in kList and len(v)>0:
                 tmpName = path+'/'+k+'.jpg';
-                checkSource.append({"tmpName":tmpName,"url":v[0]})
-                tmp_k = threading.Thread(target=self.getOtherSource, name='img_tsThread'+k, args=(tmpName,v[0]))
-                otherSource.append(tmp_k)
-            if k == 'setThumbUrl169' and len(v)>0:
-                tmpName = path+'/'+k+'.jpg';
-                checkSource.append({"tmpName":tmpName,"url":v[0]})
-                tmp_k = threading.Thread(target=self.getOtherSource, name='img_tsThread'+k, args=(tmpName,v[0]))
-                otherSource.append(tmp_k)
-        for i in otherSource:
-            i.start()
-        for i in otherSource:
-            i.join()
+                self.getOtherSource(tmpName,v[0])
+                # checkSource.append({"tmpName":tmpName,"url":v[0]})
+                # otherSource.append(threading.Thread(target=self.getOtherSource, name='img_tsThread'+k, args=(tmpName,v[0])))
+            # if k == 'setThumbUrl169' and len(v)>0:
+            #     tmpName = path+'/'+k+'.jpg';
+            #     self.getOtherSource(tmpName,v[0])
+            #     tmpName = path+'/'+k+'.jpg';
+            #     checkSource.append({"tmpName":tmpName,"url":v[0]})
+            #     otherSource.append(threading.Thread(target=self.getOtherSource, name='img_tsThread2'+k, args=(tmpName,v[0])))
+        # for i in otherSource:
+        #     i.start()
+        # for i in otherSource:
+        #     i.join()
 
+    def vdetail(self,videoUrl,videoNo):
+        self.baseUrl = videoUrl
+        path = "../../source/"+videoNo
+        if os.path.isdir(path) == False:
+            os.makedirs( path, 755 );
+        
+        htmlContent = self.mainContent(videoUrl)
+        if htmlContent == None:
+            return False
+        dict = self.parse_one_page(htmlContent)
+        if(len(dict)<0):
+            return False
+        tags = []
+        pattern = '<div class="video-metadata video-tags-list ordered-label-list cropped">([.|\s|\S|\n]*?)</div>'
+        tags = re.findall(pattern,htmlContent)
+        if(len(tags)<0):
+            return False   
+        tags = tags[0]
+        #print(tags)
+        pattern = '<a href="/tags/([.|\s|\S|\n]*?)" class="btn btn-default">([.|\s|\S|\n]*?)</a>'
+        tags = re.findall(pattern,tags)
+        if(len(tags)<0):
+            return False
+        reTags = []
+        for i in tags:
+            if len(i[1])>0:
+             reTags.append(i[1].strip())
+        self.imgFunc(path,dict) 
+        return reTags
+    
+    def getMp4(self,videoUrl):
+        self.baseUrl = videoUrl
+        
+        htmlContent = self.mainContent(videoUrl)
+        if htmlContent == None:
+            return False
+        dict = self.parse_one_page(htmlContent)
+        if(len(dict)<0):
+            return False
+        newDict = {}
+        for k,v in dict.items():
+            if len(v)>0:
+               newDict[k]=v[0]
+        return newDict
 
     def run(self,videoUrl,videoNo):
         self.baseUrl = videoUrl
