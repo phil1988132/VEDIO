@@ -64,7 +64,7 @@ def getDetail():
           sleep(10);
           continue;
        for v in data:
-           _curUpData = []
+           _curUpData = {}
            curUrl = base+v['rel'].strip('/')   
            tags = getObj.vdetail(curUrl,v['id']);
            _curUpData['imgs'] = ''

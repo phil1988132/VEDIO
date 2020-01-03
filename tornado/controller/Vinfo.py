@@ -10,6 +10,7 @@ import math
 import pymongo
 import re
 import hashlib
+from urllib.parse import urlparse
 #import sys
 #sys.path.append('....commone')
 import os
@@ -115,24 +116,32 @@ class Vinfo(tornado.web.RequestHandler):
         if videoNo > 0:
           curTableObj.update_one({"id":str(videoNo)},{"$inc":{"like_times":1}})
         return {'message':0}
+    def getMp4Url(self,url):
+
+        res=urlparse(url)
+        return res.netloc
+
     def detail(self,videoNo):
         arr = [];
         curTableObj = self.__dbInfo('redios')
         data = curTableObj.find_one({"id":str(videoNo)})
         if data is None:
             return {'message':1}  
-
         sourceInfo = ''
         message = 1
+        scheme = self.request.protocol
+        curReqHost = self.request.host
         if len(data)>0:
+           data['vimg'] = scheme+'://'+curReqHost+'/pimg/'+str(data['id'] )+'/setThumbUrl.jpg'
            message = 0
            getObj = videoDemo();
            url = self.base.rstrip('/')+'/'+data['rel'].lstrip('/')
            sourceInfo = getObj.getMp4(url)
            if 'setVideoUrlLow' in sourceInfo:
-              data['lowUrl'] = sourceInfo['setVideoUrlLow']
+              curHost = self.getMp4Url(sourceInfo['setVideoUrlLow'])
+              data['lowUrl'] = sourceInfo['setVideoUrlLow'] #.replace(curHost,curReqHost).replace('https','http')+"&orig="+curHost
            if 'setVideoUrlHigh' in sourceInfo:
-              data['highUrl'] = sourceInfo['setVideoUrlHigh']
+              data['highUrl'] = sourceInfo['setVideoUrlHigh'] #.replace(curHost,curReqHost).replace('https','http')+"&orig="+self.getMp4Url(sourceInfo['setVideoUrlLow'])
         return {'message':message,'data':data}
     def __dbInfo(self, tableName):
         getObj = videoDemo();
@@ -140,6 +149,8 @@ class Vinfo(tornado.web.RequestHandler):
         return dbObj.getTbname(tableName)
 
     def list(self,stype,word,page=1,pageSize=0,ltype=0):
+        scheme = self.request.protocol
+        curReqHost = self.request.host
         _sort = '_id'
         if ltype == 1:#热
            _sort = 'view_times' 
@@ -189,6 +200,7 @@ class Vinfo(tornado.web.RequestHandler):
         for v in data:              
             if v['ctitle']!='':
                  v['title'] = v['ctitle']
+            v['vimg'] = scheme+'://'+curReqHost+'/pimg/'+str(v['id'] )+'/setThumbUrl.jpg'
             newData.append(v)
            #count = curTableObj.find({"status":0}).count()
         
@@ -255,11 +267,14 @@ class Vinfo(tornado.web.RequestHandler):
         if data is None:
             return {'message':1}  
         _tags = data['tags']
+        scheme = self.request.protocol
+        curReqHost = self.request.host
         _data=curTableObj.find({'tags':{'$in':_tags}}).limit(20)#.skip(skip)
       
         for v in _data:  
               if v['ctitle']!='':
-                 v['title'] = v['ctitle']            
+                 v['title'] = v['ctitle']  
+              v['vimg'] = scheme+'://'+curReqHost+'/pimg/'+str(v['id'] )+'/setThumbUrl.jpg'          
               newData.append(v)
         return {'message':0,"data":newData}
 
