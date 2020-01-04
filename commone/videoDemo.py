@@ -88,7 +88,7 @@ class videoDemo:
             self.write_to_file(file,content,'wb')
         #检查是否抓取成功    
         if os.path.exists(file) == False:
-            failedLog({"file":file,"url":url})
+            self.failedLog({"file":file,"url":url})
     #抓取图片
     def imgFunc(self, path,dict):
         checkSource = otherSource = []
@@ -271,7 +271,7 @@ class videoDemo:
                 self.write_to_file(_ordFile,tmpTs,'wb')
             #检查是否抓取成功    
             if os.path.exists(_ordFile) == False:
-                failedLog({"file":_ordFile,"url":url})
+                self.failedLog({"file":_ordFile,"url":url})
             #print('thread %s ended.' % threading.current_thread().name)
     def parseRealM3u8(self,baseUrl,m3u8url,validPath,videoNo):
         content =  self.mainContent(m3u8url,0)
