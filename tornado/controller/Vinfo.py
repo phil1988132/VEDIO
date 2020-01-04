@@ -139,9 +139,9 @@ class Vinfo(tornado.web.RequestHandler):
            sourceInfo = getObj.getMp4(url)
            if 'setVideoUrlLow' in sourceInfo:
               curHost = self.getMp4Url(sourceInfo['setVideoUrlLow'])
-              data['lowUrl'] = sourceInfo['setVideoUrlLow'] #.replace(curHost,curReqHost).replace('https','http')+"&orig="+curHost
+              data['lowUrl'] = sourceInfo['setVideoUrlLow'].replace(curHost,curReqHost).replace('https','http')+"&orig="+self.getMp4Url(sourceInfo['setVideoUrlLow'])
            if 'setVideoUrlHigh' in sourceInfo:
-              data['highUrl'] = sourceInfo['setVideoUrlHigh'] #.replace(curHost,curReqHost).replace('https','http')+"&orig="+self.getMp4Url(sourceInfo['setVideoUrlLow'])
+              data['highUrl'] = sourceInfo['setVideoUrlHigh'] .replace(curHost,curReqHost).replace('https','http')+"&orig="+self.getMp4Url(sourceInfo['setVideoUrlLow'])
         return {'message':message,'data':data}
     def __dbInfo(self, tableName):
         getObj = videoDemo();
