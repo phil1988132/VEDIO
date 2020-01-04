@@ -19,6 +19,7 @@ class videoDemo:
     def __init__(self):
         dbObj = Dbobj('redio','re_')
     def failedLog(self,content):
+        dbObj = Dbobj('redio','re_')
         curTableObj = dbObj.getTbname('failedLog')
         curTableObj.insert(content)
         # t_time = datetime.datetime.now().strftime('%Y-%m-%d')
