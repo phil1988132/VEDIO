@@ -17,7 +17,7 @@ class videoDemo:
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.92 Safari/537.36"}
     baseUrl = ''
     def __init__(self):
-        self.dbObj = Dbobj('redio','re_')
+        dbObj = Dbobj('redio','re_')
     def failedLog(self,content):
         curTableObj = dbObj.getTbname('failedLog')
         curTableObj.insert(content)
