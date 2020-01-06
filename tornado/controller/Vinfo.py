@@ -139,7 +139,10 @@ class Vinfo(tornado.web.RequestHandler):
            data['vimg'] = scheme+'://'+curReqHost+'/pimg/'+str(data['id'] )+'/setThumbUrl.jpg'
            message = 0
            getObj = videoDemo();
-           url = self.base.rstrip('/')+'/'+data['rel'].lstrip('/')
+           _rel = data.get('rel',0)
+           if _rel == 0:
+              _rel = data.get('url')
+           url = self.base.rstrip('/')+'/'+_rel.lstrip('/')
            sourceInfo = getObj.getMp4(url)
            if 'setVideoUrlLow' in sourceInfo:
               curHost = self.getMp4Url(sourceInfo['setVideoUrlLow'])
