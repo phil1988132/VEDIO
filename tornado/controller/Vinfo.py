@@ -182,7 +182,7 @@ class Vinfo(tornado.web.RequestHandler):
         if stype == '1' or word == None:
            data = curTableObj.find({"status":1}).sort(_sort, pymongo.DESCENDING).limit(curSize).skip(curBegin)
            count = data.count()
-        else:           
+        elif stype not in ['4','5']:           
            word = word+'.*'  
         if stype == '2':
            #data = curTableObj.find({'tags': {'$regex':'mp.*'}}).limit(1)	
@@ -201,12 +201,12 @@ class Vinfo(tornado.web.RequestHandler):
             count = data.count() 
         if stype == '4':
 
-           data = curTableObj.find({"category": word}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
+           data = curTableObj.find({"category": int(word)}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
 
            count = data.count()
         if stype == '5':
 
-           data = curTableObj.find({"trends": word}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
+           data = curTableObj.find({"trends": int(word)}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
 
            count = data.count()
 
@@ -239,7 +239,7 @@ class Vinfo(tornado.web.RequestHandler):
         curTableObj = self.__dbInfo('redios')
         #无搜索分页
         newData = []
-        data = curTableObj.find({"_id":{"$gt": 1}}).sort('view_times', pymongo.DESCENDING).limit(20)
+        data = curTableObj.find({"_id":{"$gt": 0}}).sort('view_times', pymongo.DESCENDING).limit(20)
       
         for v in data:
           if v['ctitle']!='':
