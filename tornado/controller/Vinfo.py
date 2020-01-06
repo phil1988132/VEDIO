@@ -212,8 +212,8 @@ class Vinfo(tornado.web.RequestHandler):
 
            #data = curTableObj.find({"$and":[{"status":1},{"$or":[{"tags":{'$regex': word}},{"title":{'$regex': word}}]}]}).sort('_id', pymongo.ASCENDING).limit(curSize).skip(curBegin)      
         for v in data:              
-            if v.get('ctitle',0)!=0 or v.get('ctitle',0)!='':
-                 v['title'] = v['ctitle']
+            # if v.get('ctitle',0)!=0 or v.get('ctitle',0)!='':
+            #      v['title'] = v['ctitle']
             v['vimg'] = scheme+'://'+curReqHost+'/pimg/'+str(v['id'] )+'/setThumbUrl.jpg'
             newData.append(v)
            #count = curTableObj.find({"status":0}).count()
