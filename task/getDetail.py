@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 #视频详情抓取
-from videoDemo import videoDemo 
-from Dbobj import Dbobj 
+from commone.videoDemo import videoDemo 
+from commone.Dbobj import Dbobj 
 import json
 from multiprocessing import Pool,Process
 import time
