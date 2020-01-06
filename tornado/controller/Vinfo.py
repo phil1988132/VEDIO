@@ -281,31 +281,32 @@ class Vinfo(tornado.web.RequestHandler):
         curTableObj = self.__dbInfo('redios')
         #无搜索分页
         newData = []
-        if page <1:
-           page = 1
-        skip = (page-1)*30
-        data = curTableObj.find_one({"id":str(_id)})
-        if data is None:
-            return {'message':1}  
-        _where = []
-        _tags = data.get('tags',0)
-        if _tags != '' and _tags!=0:
-            _where.append({'tags':{'$in':_tags}})
-        _trends = data.get('trends',0)
-        if _trends != '' and _trends!=0:
-            _where.append({'trends':{'$in':_trends}})
-        _category = data.get('category',0)
-        if _category != '' and _category!=0:
-            _where.append({'category':{'$in':_category}})
-        scheme = self.request.protocol
-        curReqHost = self.request.host
-        _data=curTableObj.find({'$or':_where}).limit(20)#.skip(skip)
-        #'$or': [ { 'markup':{'$gt':1000}  }, {'markup':{'$lt':-1000} } ]
-        for v in _data:  
-              if v['ctitle']!='':
-                 v['title'] = v['ctitle']  
-              v['vimg'] = scheme+'://'+curReqHost+'/pimg/'+str(v['id'] )+'/setThumbUrl.jpg'          
-              newData.append(v)
+        # if page <1:
+        #    page = 1
+        # skip = (page-1)*30
+        # data = curTableObj.find_one({"id":str(_id)})
+        # if data is None:
+        #     return {'message':1}  
+        # _where = []
+        # _tags = data.get('tags',0)
+        # if _tags != '' and _tags!=0:
+        #     _where.append({'tags':{'$in':_tags}})
+        # _trends = data.get('trends',0)
+        # if _trends != '' and _trends!=0:
+        #     _where.append({'trends':{'$in':_trends}})
+        # _category = data.get('category',0)
+        # if _category != '' and _category!=0:
+        #     _where.append({'category':{'$in':_category}})
+        # scheme = self.request.protocol
+        # curReqHost = self.request.host
+        # _data=curTableObj.find({'$or':_where}).limit(20)
+        # #.skip(skip)
+        # #'$or': [ { 'markup':{'$gt':1000}  }, {'markup':{'$lt':-1000} } ]
+        # for v in _data:  
+        #       if v['ctitle']!='':
+        #          v['title'] = v['ctitle']  
+        #       v['vimg'] = scheme+'://'+curReqHost+'/pimg/'+str(v['id'] )+'/setThumbUrl.jpg'          
+        #       newData.append(v)
         return {'message':0,"data":newData}
 
         # #tag分页
