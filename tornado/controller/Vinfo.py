@@ -262,7 +262,7 @@ class Vinfo(tornado.web.RequestHandler):
         curTableObj = self.__dbInfo(_keyTag)
         #无搜索分页
         newData = []
-        data = curTableObj.find({"_id":{"$gt": 1}})
+        data = curTableObj.find({"_id":{"$gt": 0}})
       
         for v in data:              
               newData.append(v)
