@@ -16,23 +16,25 @@ def deRange(num):
     dbObj = Dbobj('redio','re_')
     arr = [];
     curTableObj = dbObj.getTbname('redios')
-    url="https://www.xvideos.com/new/"+str(num);
+    if num < 1:
+        url="https://www.xvideos.com/"
+    else:    
+        url="https://www.xvideos.com/new/"+str(num);
 
     for v in getObj.getVedioUrl(url):
-        print(v);exit('4');
         if v['id']!='':
            v['_id'] = dbObj.getNextValue('redios')
            v['tags']=v['cates']=''
            v['status']=0
-           curTableObj.update({"id":v['id'].strip()},{"$setOnInsert":v}, upsert=True);
-    i -=1;
-    if i%10 == 0:
-       time.sleep(0.5)     
+           curTableObj.update({"id":v['id'].strip()},{"$setOnInsert":v}, upsert=True);   
 if __name__=='__main__':
-    pageList = [1]
-    pageCount = len(pageList)
-    p = Pool(pageCount)
+    pageList = list(range(0,10))
     for i in pageList:
-        p.apply_async(deRange, args=(i,))
-    p.close()
-    p.join()
+        deRange(i)
+
+    # pageCount = len(pageList)
+    # p = Pool(pageCount)
+    # for i in pageList:
+    #     p.apply_async(deRange, args=(i,))
+    # p.close()
+    # p.join()
