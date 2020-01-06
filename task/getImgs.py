@@ -46,7 +46,7 @@ def poolDetail(start,end):
            # else:
            #      _curUpData['status'] = 1
                 #_curUpData['ctitle'] = s           
-          _curUpData['status'] = 1     
+           _curUpData['status'] = 1     
            if tags != False:
                 _curUpData['tags'] = tags
            data = curTableObj.update({"id":v['id']},{"$set":_curUpData})
