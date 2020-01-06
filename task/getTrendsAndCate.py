@@ -1,6 +1,6 @@
 #coding=utf-8
 from bs4 import BeautifulSoup 
-from selenium import webdriver
+#from selenium import webdriver
 import sys
 sys.path.append('..')
 from commone.Dbobj import Dbobj 
@@ -9,6 +9,7 @@ import threading
 import time
 from commone.videoDemo import videoDemo 
 import pymongo
+from multiprocessing import Pool
 class getTrendsAndCate:
     base ="https://www.xvideos.com"
     def __init__(self,obj,curlObj):
@@ -28,7 +29,7 @@ class getTrendsAndCate:
         #print(info);exit(556)
         if info is None:
             curDict = {
-                #"_id":self.dbObj.getNextValue('redios'),
+                "_id":self.dbObj.getNextValue('redios'),
                 "id":data['id'],
                 "title":data['title'],
                 "status":0,
@@ -98,7 +99,7 @@ class getTrendsAndCate:
         #print(info);exit(556)
         if info is None:
             curDict = {
-                #"_id":self.dbObj.getNextValue('redios'),
+                "_id":self.dbObj.getNextValue('redios'),
                 "id":data['id'],
                 "title":data['title'],
                 "status":0,
