@@ -170,7 +170,7 @@ if __name__=='__main__':
     obj = getTrendsAndCate(dbObj,curlObj)
     p = Pool(2)
     p.apply_async(obj.runTreands(), args=())
-    p.apply_async(obj.runCates, args=())
+    p.apply_async(obj.runCates(), args=())
     p.close()
     p.join() 
 
