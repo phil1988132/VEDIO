@@ -66,6 +66,10 @@ class Vinfo(tornado.web.RequestHandler):
             deinfo = self.views(no)
         elif _type == 7:
             deinfo = self.tops()
+        elif _type == 8:
+            deinfo = self.tags(1)
+        elif _type == 9:
+            deinfo = self.tags(2)
         self.finish(deinfo)
       #except:
       #  self.finish({'message':1})
@@ -195,6 +199,16 @@ class Vinfo(tornado.web.RequestHandler):
             #    data = curTableObj.find({"status":1,"title":{'$regex': word}}).sort('_id', pymongo.ASCENDING).limit(curSize).skip(curBegin) 
             data = curTableObj.find({"status":1,"title":{'$regex': word}}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin) 
             count = data.count() 
+        if stype == '4':
+
+           data = curTableObj.find({"category": word}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
+
+           count = data.count()
+        if stype == '5':
+
+           data = curTableObj.find({"trends": word}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
+
+           count = data.count()
 
            #data = curTableObj.find({"$and":[{"status":1},{"$or":[{"tags":{'$regex': word}},{"title":{'$regex': word}}]}]}).sort('_id', pymongo.ASCENDING).limit(curSize).skip(curBegin)      
         for v in data:              
@@ -234,14 +248,18 @@ class Vinfo(tornado.web.RequestHandler):
         credis.set(_keyTag,newData,60*60*8)
         return {'message':0,"data":newData}
 
-    def tags(self):
+    def tags(self,type=0):
         credis = Credis()
         _keyTag = 'tags'
+        if type == 1:
+           _keyTag = 'category'
+        elif type == 2:
+           _keyTag = 'trends'
         data = credis.get(_keyTag)
         if data != None:
             return {'message':0,"data":data}
         arr = [];
-        curTableObj = self.__dbInfo('tags')
+        curTableObj = self.__dbInfo(_keyTag)
         #无搜索分页
         newData = []
         data = curTableObj.find({"_id":{"$gt": 1}})
