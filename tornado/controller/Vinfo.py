@@ -290,7 +290,7 @@ class Vinfo(tornado.web.RequestHandler):
         _where = []
         _tags = data.get('tags',0)
         if _tags != '' and _tags!=0:
-            _where.append({{'tags':{'$in':_tags}})
+            _where.append({'tags':{'$in':_tags}})
         _trends = data.get('trends',0)
         if _trends != '' and _trends!=0:
             _where.append({'trends':{'$in':_trends}})
