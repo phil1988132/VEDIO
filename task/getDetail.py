@@ -63,22 +63,26 @@ def getDetail():
        if data is None:
           sleep(10);
           continue;
-       g = GoogleTranslator()
+       #g = GoogleTranslator()
        for v in data:
-           curUrl = base+v['rel'].strip('/')   
+           _rel = v.get('rel',0)
+           if _rel == 0:
+              _rel = v.get('url')
+           curUrl = base+_rel.strip('/')  
            #curTableObj.run(curUrl,i['id'])
            #curUrl='https://www.xvideos.com/video13860839/502_-_horny_asian_couple_had_sex_on_bed'
            tags = getObj.vdetail(curUrl,v['id'])
 
            v['title']=v['title'].replace('&#039','').replace('&amp;','')
 
-           s=g.translate(v['title'])
+           #s=g.translate(v['title'])
            _curUpData = {}
-           if s == '':
-                _curUpData['status'] = 3
-           else:
-                _curUpData['status'] = 1
-                _curUpData['ctitle'] = s           
+           # if s == '':
+           #      _curUpData['status'] = 3
+           # else:
+           #      _curUpData['status'] = 1
+           #      _curUpData['ctitle'] = s     
+           _curUpData['status'] = 1      
            if tags != False:
                 _curUpData['tags'] = tags
            data = curTableObj.update({"id":v['id']},{"$set":_curUpData})

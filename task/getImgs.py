@@ -65,7 +65,10 @@ def getDetail():
           continue;
        for v in data:
            _curUpData = {}
-           curUrl = base+v['rel'].strip('/')   
+           _rel = v.get('rel',0)
+           if _rel == 0:
+              _rel = v.get('url')
+           curUrl = base+_rel.strip('/')   
            tags = getObj.vdetail(curUrl,v['id']);
            _curUpData['imgs'] = ''
            data = curTableObj.update({"id":v['id']},{"$set":_curUpData})
