@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: UTF-8 -*-
 #视频详情抓取
-from commone.videoDemo import videoDemo 
-from commone.Dbobj import Dbobj 
 import json
 from multiprocessing import Pool,Process
 import time
@@ -10,6 +8,8 @@ import pymongo
 import sys
 sys.path.append('..')
 from commone.GoogleTranslator import GoogleTranslator
+from commone.videoDemo import videoDemo 
+from commone.Dbobj import Dbobj 
 
 def poolDetail(start,end):
     getObj = videoDemo();
