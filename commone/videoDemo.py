@@ -122,18 +122,18 @@ class videoDemo:
         if htmlContent == None:
             return False
         dict = self.parse_one_page(htmlContent)
-        if(len(dict)<0):
+        if(len(dict)<1):
             return False
         tags = []
         pattern = '<div class="video-metadata video-tags-list ordered-label-list cropped">([.|\s|\S|\n]*?)</div>'
         tags = re.findall(pattern,htmlContent)
-        if(len(tags)<0):
-            return False   
+        if(len(tags)<1):
+            return False    
         tags = tags[0]
         #print(tags)
         pattern = '<a href="/tags/([.|\s|\S|\n]*?)" class="btn btn-default">([.|\s|\S|\n]*?)</a>'
         tags = re.findall(pattern,tags)
-        if(len(tags)<0):
+        if(len(tags)<1):
             return False
         reTags = []
         for i in tags:
@@ -149,7 +149,7 @@ class videoDemo:
         if htmlContent == None:
             return False
         dict = self.parse_one_page(htmlContent)
-        if(len(dict)<0):
+        if(len(dict)<1):
             return False
         newDict = {}
         for k,v in dict.items():
