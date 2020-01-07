@@ -70,6 +70,8 @@ class Vinfo(tornado.web.RequestHandler):
             deinfo = self.tags(1)
         elif _type == 9:
             deinfo = self.tags(2)
+        elif _type == 10:
+            deinfo = self.tags(3)
         self.finish(deinfo)
       #except:
       #  self.finish({'message':1})
@@ -185,7 +187,7 @@ class Vinfo(tornado.web.RequestHandler):
         if stype == '1' or word == None:
            data = curTableObj.find({"status":1}).sort(_sort, pymongo.DESCENDING).limit(curSize).skip(curBegin)
            count = data.count()
-        elif stype not in ['4','5']:           
+        elif stype not in ['4','5','6']:           
            word = word+'.*'  
         if stype == '2':
            #data = curTableObj.find({'tags': {'$regex':'mp.*'}}).limit(1)	
@@ -210,6 +212,11 @@ class Vinfo(tornado.web.RequestHandler):
         if stype == '5':
 
            data = curTableObj.find({"trends": int(word)}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
+
+           count = data.count()
+        if stype == '6':
+
+           data = curTableObj.find({"stars": int(word)}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
 
            count = data.count()
 
@@ -258,6 +265,8 @@ class Vinfo(tornado.web.RequestHandler):
            _keyTag = 'category'
         elif type == 2:
            _keyTag = 'trends'
+        elif type == 3:
+           _keyTag = 'local_stars'
         data = credis.get(_keyTag)
         if data != None:
             return {'message':0,"data":data}
