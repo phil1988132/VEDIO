@@ -21,7 +21,7 @@ from commone.videoDemo import videoDemo
 
 class Vinfo(tornado.web.RequestHandler):
     base = 'https://www.xvideos.com/'
-    pageNum = 36
+    pageNum = 5
     _k = '12345,.Abc33678'
     def post(self):
       #try:
@@ -252,8 +252,8 @@ class Vinfo(tornado.web.RequestHandler):
         data = curTableObj.find({"_id":{"$gt": 0}}).sort('view_times', pymongo.DESCENDING).limit(20)
       
         for v in data:
-          if v['ctitle']!='':
-               v['title'] = v['ctitle']              
+          # if v['ctitle']!='':
+          #      v['title'] = v['ctitle']              
           newData.append(v)
         credis.set(_keyTag,newData,60*60*8)
         return {'message':0,"data":newData}
@@ -309,6 +309,11 @@ class Vinfo(tornado.web.RequestHandler):
         _category = data.get('category',0)
         if _category != '' and _category!=0:
             _where.append({'category':{'$in':_category}})
+        _stars = data.get('stars',0)
+        if _stars != '' and _stars!=0:
+            _where.append({'stars':{'$in':_stars}})
+        if len(_where) < 1:
+            return {'message':1}  
         scheme = self.request.protocol
         curReqHost = self.request.host
         _data=curTableObj.find({'$or':_where}).limit(20)
@@ -317,8 +322,8 @@ class Vinfo(tornado.web.RequestHandler):
         #_data=curTableObj.find({'tags':{'$in':_tags}}).limit(20)#.skip(skip)
       
         for v in _data:  
-              if v['ctitle']!='':
-                 v['title'] = v['ctitle']  
+              # if v['ctitle']!='':
+              #    v['title'] = v['ctitle']  
               v['vimg'] = scheme+'://'+curReqHost+'/pimg/'+str(v['id'] )+'/setThumbUrl.jpg'          
               newData.append(v)
         return {'message':0,"data":newData}

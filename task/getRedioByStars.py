@@ -17,7 +17,7 @@ class getStarList:
         self.curlObj = curlObj
     def getLocalStarList(self):
         curTableObj = self.dbObj.getTbname('local_stars')
-        trndsList = curTableObj.find({"_id":{"$gt":0}}) #.sort('_id', pymongo.DESCENDING)
+        trndsList = curTableObj.find({"_id":{"$gt":101}}) #.sort('_id', pymongo.DESCENDING)
         if trndsList is None:
             return False
         for v in trndsList:
