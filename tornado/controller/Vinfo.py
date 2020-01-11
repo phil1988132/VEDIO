@@ -146,6 +146,8 @@ class Vinfo(tornado.web.RequestHandler):
               _rel = data.get('url')
            url = self.base.rstrip('/')+'/'+_rel.lstrip('/')
            sourceInfo = getObj.getMp4(url)
+           if sourceInfo == False:
+              return {'message':1}
            if 'setVideoUrlLow' in sourceInfo:
               curHost = self.getMp4Url(sourceInfo['setVideoUrlLow'])
               data['lowUrl'] = sourceInfo['setVideoUrlLow'].replace(curHost,curReqHost).replace('https','http')+"&orig="+self.getMp4Url(sourceInfo['setVideoUrlLow'])
