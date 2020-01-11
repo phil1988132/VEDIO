@@ -21,7 +21,7 @@ from commone.videoDemo import videoDemo
 
 class Vinfo(tornado.web.RequestHandler):
     base = 'https://www.xvideos.com/'
-    pageNum = 5
+    pageNum = 36
     _k = '12345,.Abc33678'
     def post(self):
       #try:

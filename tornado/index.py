@@ -16,7 +16,7 @@ def make_app():
     return tornado.web.Application([
         (r"/", MainHandler),
         (r"/info", Vinfo),
-    ],debug=True)
+    ],debug=False)
 
 if __name__ == "__main__":
     app = make_app()
