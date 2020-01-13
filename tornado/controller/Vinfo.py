@@ -303,16 +303,16 @@ class Vinfo(tornado.web.RequestHandler):
         # curReqHost = self.request.host
         _where = []
         _trends = data.get('trends',0)
-        if _trends != '' and _trends!=0:
+        if _trends != '' and _trends!=0 and len(_trends)>0:
             _where.append({'trends':{'$in':_trends}})
         _stars = data.get('stars',0)
-        if _stars != '' and _stars!=0:
+        if _stars != '' and _stars!=0 and len(_stars)>0:
             _where.append({'stars':{'$in':_stars}})
         _category = data.get('category',0)
-        if _category != '' and _category!=0:
+        if _category != '' and _category!=0 and len(_category)>0:
             _where.append({'category':{'$in':_category}})
         _tags = data.get('tags',0)
-        if _tags != '' and _tags!=0:
+        if _tags != '' and _tags!=0 and len(_tags)>0:
             _where.append({'tags':{'$in':_tags}})
         if len(_where) < 1:
             return {'message':1}  
