@@ -21,7 +21,7 @@ class getStarList:
         if trndsList is None:
             return False
         for v in trndsList:
-            yield v   
+           yield v   
 
     def getLocalStarDetail(self, rel):
         i = 0
