@@ -28,7 +28,8 @@ class getStarList:
         while i<100:
             baseUrl = self.base+rel['rel'] 
             if i > 0:
-               baseUrl = baseUrl+'#'+str(i)       
+               baseUrl = baseUrl+'#'+str(i)  
+            baseUrl = baseUrl+'/videos/best'            
             content = self.curlObj.mainContent(baseUrl)
             if content is None:
                 break 
