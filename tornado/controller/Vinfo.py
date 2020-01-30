@@ -188,7 +188,7 @@ class Vinfo(tornado.web.RequestHandler):
         if len(newData)>0:
            curPath = newData.get('path',0)
            if curPath is not None:
-              data['vimg'] = scheme+'://'+curReqHost+'/pimg'+curPath
+              newData['vimg'] = scheme+'://'+curReqHost+'/pimg'+str(curPath)
         message = 0
         return {'message':message,'data':newData}
     def __dbInfo(self, tableName):
@@ -297,6 +297,7 @@ class Vinfo(tornado.web.RequestHandler):
            #data = curTableObj.find({"$and":[{"status":1},{"$or":[{"tags":{'$regex': word}},{"title":{'$regex': word}}]}]}).sort('_id', pymongo.ASCENDING).limit(curSize).skip(curBegin)      
         count = data.count()
         if stype == '6':
+          for v in data:   
             v['vimg'] = scheme+'://'+curReqHost+'/pimg/stars/'+str(v['_id'] )+'.jpg'
             newData.append(v)         
         else:          
