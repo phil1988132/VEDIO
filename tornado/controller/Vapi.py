@@ -44,6 +44,7 @@ class Vapi(tornado.web.RequestHandler):
            return
         _type =  self.get_argument('type',1)           
         _device =   self.get_argument('device',1) 
+        title =   self.get_argument('title',1)  
         allData = []
         curData = []
         curData = json.loads(ads)
@@ -53,6 +54,7 @@ class Vapi(tornado.web.RequestHandler):
            i['type'] = int(_type)
            i['device'] = int(_device)
            i['status'] = 0
+           i['title'] = title
            allData.append(i)    
         re = curTableObj.insert_many(allData)
         if re: 
