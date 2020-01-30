@@ -260,14 +260,14 @@ class Vinfo(tornado.web.RequestHandler):
 
         if stype == '1' or word == None:
            data = curTableObj.find({"status":1}).sort(_sort, pymongo.DESCENDING).limit(curSize).skip(curBegin)
-           count = data.count()
+           #count = data.count()
         elif stype not in ['4','5','6']:           
            word = word+'.*'  
         if stype == '2':
            #data = curTableObj.find({'tags': {'$regex':'mp.*'}}).limit(1)	
            data = curTableObj.find({"status":1,"tags": {'$regex': word}}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
            #data = curTableObj.find({'tags': {'$regex':'mo.*'}}).limit(1)
-           count = data.count()
+           #count = data.count()
            #return {'page':count}
         if stype == '3':
             #tagsArr = self.getTagsFromK(orig_word)
@@ -277,30 +277,32 @@ class Vinfo(tornado.web.RequestHandler):
             # else:
             #    data = curTableObj.find({"status":1,"title":{'$regex': word}}).sort('_id', pymongo.ASCENDING).limit(curSize).skip(curBegin) 
             data = curTableObj.find({"status":1,"title":{'$regex': word}}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin) 
-            count = data.count() 
+            #count = data.count() 
         if stype == '4':
 
            data = curTableObj.find({"category": int(word)}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
 
-           count = data.count()
+           #count = data.count()
         if stype == '5':
 
            data = curTableObj.find({"trends": int(word)}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
 
-           count = data.count()
+           #count = data.count()
         if stype == '6':
 
            data = curTableObj.find({"stars": int(word)}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
 
-           count = data.count()
+           #count = data.count()
 
            #data = curTableObj.find({"$and":[{"status":1},{"$or":[{"tags":{'$regex': word}},{"title":{'$regex': word}}]}]}).sort('_id', pymongo.ASCENDING).limit(curSize).skip(curBegin)      
-        for v in data:              
-            # if v.get('ctitle',0)!=0 or v.get('ctitle',0)!='':
-            #      v['title'] = v['ctitle']
+        count = data.count()
+        if stype == '6':
+            v['vimg'] = scheme+'://'+curReqHost+'/pimg/stars/'+str(v['_id'] )+'.jpg'
+            newData.append(v)         
+        else:          
+          for v in data:              
             v['vimg'] = scheme+'://'+curReqHost+'/pimg/'+str(v['id'] )+'/setThumbUrl.jpg'
             newData.append(v)
-           #count = curTableObj.find({"status":0}).count()
         
         return {'message':0,"data":newData,"count":count,"endPage":self.page(count,page)}
 
