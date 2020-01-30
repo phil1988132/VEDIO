@@ -167,7 +167,7 @@ class Vinfo(tornado.web.RequestHandler):
               data['highUrl'] = sourceInfo['setVideoUrlHigh'] .replace(curHost,curReqHost).replace('https','http')+"&orig="+self.getMp4Url(sourceInfo['setVideoUrlLow'])
         return {'message':message,'data':data}
 
-    def adDetail(self,_type=1,device=2):
+    def adDetail(self,_type=1,device=1):
         arr = [];
         curTableObj = self.__dbInfo('ads')
         data = curTableObj.aggregate([
@@ -188,7 +188,7 @@ class Vinfo(tornado.web.RequestHandler):
         if len(newData)>0:
            curPath = newData.get('path',0)
            if curPath is not None:
-              newData['vimg'] = 'https://cdnegc.trafficfactory.biz/banners/ca/b7/62/690ef1cf5721d84f976315e769ac9b4a.jpg'#scheme+'://'+curReqHost+'/pimg/'+str(newData.get('path') )
+              data['vimg'] = scheme+'://'+curReqHost+'/pimg/ads/'+curPath
         message = 0
         return {'message':message,'data':newData}
     def __dbInfo(self, tableName):
