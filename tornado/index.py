@@ -7,6 +7,7 @@ import tornado.autoreload
 # sys.path.append('D:\\wwwroot\\py\\proj')
 # from videoDemo import videoDemo 
 from controller.Vinfo  import Vinfo 
+from controller.Vapi  import Vapi 
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -16,7 +17,8 @@ def make_app():
     return tornado.web.Application([
         (r"/", MainHandler),
         (r"/info", Vinfo),
-    ],debug=False)
+        (r"/api", Vapi),
+    ],debug=True)
 
 if __name__ == "__main__":
     app = make_app()
