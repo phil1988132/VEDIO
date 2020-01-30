@@ -188,7 +188,7 @@ class Vinfo(tornado.web.RequestHandler):
         if len(newData)>0:
            curPath = newData.get('path',0)
            if curPath is not None:
-              data['vimg'] = scheme+'://'+curReqHost+'/pimg/ads/'+curPath
+              data['vimg'] = scheme+'://'+curReqHost+'/pimg'+curPath
         message = 0
         return {'message':message,'data':newData}
     def __dbInfo(self, tableName):
