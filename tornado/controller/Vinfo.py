@@ -189,7 +189,7 @@ class Vinfo(tornado.web.RequestHandler):
            curPath = newData.get('path',0)
            if curPath is not None:
               newData['vimg'] = 'https://cdnegc.trafficfactory.biz/banners/ca/b7/62/690ef1cf5721d84f976315e769ac9b4a.jpg'#scheme+'://'+curReqHost+'/pimg/'+str(newData.get('path') )
-           message = 0
+        message = 0
         return {'message':message,'data':newData}
     def __dbInfo(self, tableName):
         getObj = videoDemo();
