@@ -34,7 +34,7 @@ class Vinfo(tornado.web.RequestHandler):
            return
         _deviceType =  self.get_argument('de',0)
         if _deviceType == '2':
-           self.showPage = 6
+           self.showPage = 4
         isValid = self.checkPost(nonce,token)
         if isValid == False:
            self.finish({'message':1})
@@ -83,7 +83,7 @@ class Vinfo(tornado.web.RequestHandler):
             ltype = int(ltype)
             deinfo = self.starsList(self.get_argument('page',1),pageSize,ltype)
         elif _type == 12:
-             deinfo = self.adDetail()
+             deinfo = self.adDetail(_deviceType)
         self.finish(deinfo)
       #except:
       #  self.finish({'message':1})
@@ -167,7 +167,7 @@ class Vinfo(tornado.web.RequestHandler):
               data['highUrl'] = sourceInfo['setVideoUrlHigh'] .replace(curHost,curReqHost).replace('https','http')+"&orig="+self.getMp4Url(sourceInfo['setVideoUrlLow'])
         return {'message':message,'data':data}
 
-    def adDetail(self,_type=1,device=1):
+    def adDetail(self,device=1,_type=1):
         arr = [];
         curTableObj = self.__dbInfo('ads')
         data = curTableObj.aggregate([
@@ -189,6 +189,7 @@ class Vinfo(tornado.web.RequestHandler):
            curPath = newData.get('path',0)
            if curPath is not None:
               newData['vimg'] = scheme+'://'+curReqHost+'/pimg'+str(curPath)
+              #newData['vimg'] = 'https://cdnegc.trafficfactory.biz/banners/97/57/75/06ab192431844ecc0f718babd2b91fd0.jpg'
         message = 0
         return {'message':message,'data':newData}
     def __dbInfo(self, tableName):
