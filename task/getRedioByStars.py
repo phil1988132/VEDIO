@@ -17,7 +17,7 @@ class getStarList:
         self.curlObj = curlObj
     def getLocalStarList(self):
         curTableObj = self.dbObj.getTbname('local_stars')
-        trndsList = curTableObj.find({"_id":{"$gt":0}}) #.sort('_id', pymongo.DESCENDING)
+        trndsList = curTableObj.find({"_id":{"$gt":0}}).sort('_id', pymongo.DESCENDING)
         if trndsList is None:
             return False
         for v in trndsList:
@@ -116,30 +116,81 @@ class getStarList:
 
         table = self.dbObj.getTbname('local_stars')
         table.insert_many(allData)
-    def getLocalStar(self,obj):
-        curlObj = videoDemo()
-        dbObj = Dbobj('redio','re_')
-        #obj = getStarList(dbObj,curlObj)
-        urls = ['https://www.xvideos.com/pornstars-index/japan','https://www.xvideos.com/pornstars-index/china','https://www.xvideos.com/pornstars-index/hong_kong']
-        i = 0
-        for url in urls:
-            if i == 0:
-                type = 1
-            else:
-                type = 0
-            i += 1     
-            obj.getList(url,type)        
+    def getListNew(self,v):
+        url ="https://www.xvideos.com"+v['rel']
+        country = v['country']     
+        content = self.curlObj.mainContent(url)
+        newCurTable = self.dbObj.getTbname('stars')
+        if content is None:
+            return False
+        pattern = '<p class="title"><a href="([.|\s|\S|\n]*?)" title="([.|\s|\S|\n]*?)">([.|\s|\S|\n]*?)</a></p>'
+        pattern = '<a href="/profiles/([.|\s|\S|\n]*?)">([.|\s|\S|\n]*?)</a>'
+        listCates = re.findall(pattern,content)
+        #print(listCates);exit(3)
+        if listCates is None:
+            return False
+        allData = []    
+        for v in listCates:
+            curDict = {}
+            curDict['_id'] = self.dbObj.getNextValue('local_stars')
+            curDict['rel'] = '/profiles/'+v[0]
+            curDict['cname'] = curDict['name'] = v[1].strip()
+            curDict['country'] = country
+            allData.append(curDict)
 
+        table = self.dbObj.getTbname('local_stars')
+        table.insert_many(allData)
+    def getLocalStar(self):
+        # curlObj = videoDemo()
+        # dbObj = Dbobj('redio','re_')
+        # #obj = getStarList(dbObj,curlObj)
+        # #urls = ['https://www.xvideos.com/pornstars-index/japan','https://www.xvideos.com/pornstars-index/china','https://www.xvideos.com/pornstars-index/hong_kong']
+        # i = 0
+        # type = 0
+        for v in self.getLocalCountryList():    
+            self.getListNew(v)
+    def getLocalCountryList(self):
+        curTableObj = self.dbObj.getTbname('stars_country')
+        trndsList = curTableObj.find({"_id":{"$gt":0}}) #.sort('_id', pymongo.DESCENDING)
+        if trndsList is None:
+            return False
+        for v in trndsList:
+           if v['country'] not in ('Japan','China','Hong Kong'):
+              yield v          
+    def getStarlink(self):
+        url = "https://www.xvideos.com/pornstars-index/countries";  
+        content = self.curlObj.mainContent(url)
+        #newCurTable = self.dbObj.getTbname('stars')
+        if content is None:
+            return False
+        pattern = '<ul class="tags-list">([.|\s|\S|\n]*?)</ul>'
+        listCates = re.findall(pattern,content)
+        #print(listCates);exit(3)
+        if listCates is None:
+            return False
+        listCates = listCates[0]
+        #print(listCates);exit('5')
+        pattern = '<a href="([.|\s|\S|\n]*?)"><b><span([.|\s|\S|\n]*?)></span>([.|\s|\S|\n]*?)</b><span([.|\s|\S|\n]*?)>([.|\s|\S|\n]*?)</span></a>'
+        listCates = re.findall(pattern,listCates)
+        
+        if listCates is None:
+            return False
+        countryList = []
+        for v in listCates:
+            curRel = v[0].strip()
+            curCountry = v[2].strip()
+            countryList.append({'rel':curRel,'country':curCountry,'_id':self.dbObj.getNextValue('stars_country')})
+        table = self.dbObj.getTbname('stars_country')
+        table.insert_many(countryList)
+        
+                
 
 if __name__=='__main__':
     curlObj = videoDemo()
     dbObj = Dbobj('redio','re_')
     obj = getStarList(dbObj,curlObj)
+    #obj.getStarlink();
+    #obj.getLocalStar()
     obj.runStars()
-    # p = Pool(2)
-    # p.apply_async(obj.runTreands(), args=())
-    # p.apply_async(obj.runCates, args=())
-    # p.close()
-    # p.join() 
 
 
