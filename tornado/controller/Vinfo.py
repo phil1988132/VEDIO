@@ -21,7 +21,8 @@ from commone.videoDemo import videoDemo
 
 class Vinfo(tornado.web.RequestHandler):
     base = 'https://www.xvideos.com/'
-    pageNum = 36
+    pageNum = 35
+    showPage = 19
     _k = '12345,.Abc33678'
     def post(self):
       #try:
@@ -31,6 +32,9 @@ class Vinfo(tornado.web.RequestHandler):
         if(nonce == None or token == None):
            self.finish({'message':1})
            return
+        _deviceType =  self.get_argument('de',0)
+        if _deviceType == '2':
+           self.showPage = 6
         isValid = self.checkPost(nonce,token)
         if isValid == False:
            self.finish({'message':1})
@@ -72,6 +76,14 @@ class Vinfo(tornado.web.RequestHandler):
             deinfo = self.tags(2)
         elif _type == 10:
             deinfo = self.tags(3)
+        elif _type == 11:
+            pageSize = self.get_argument('pageNum',0)
+            pageSize = int(pageSize)
+            ltype = self.get_argument('ltype',0)
+            ltype = int(ltype)
+            deinfo = self.starsList(self.get_argument('page',1),pageSize,ltype)
+        elif _type == 12:
+             deinfo = self.adDetail()
         self.finish(deinfo)
       #except:
       #  self.finish({'message':1})
@@ -154,10 +166,70 @@ class Vinfo(tornado.web.RequestHandler):
            if 'setVideoUrlHigh' in sourceInfo:
               data['highUrl'] = sourceInfo['setVideoUrlHigh'] .replace(curHost,curReqHost).replace('https','http')+"&orig="+self.getMp4Url(sourceInfo['setVideoUrlLow'])
         return {'message':message,'data':data}
+
+    def adDetail(self,_type=1,device=2):
+        arr = [];
+        curTableObj = self.__dbInfo('ads')
+        data = curTableObj.aggregate([
+          {"$match":{'status':0,'device':int(device),'type':int(_type)}}, 
+          {"$group": {"_id":"$_id","count": {"$sum": 1},"data":{"$push":{"url":"$url","status":"$status","_id":"$_id",'device':"$device",'type':"$type",'path':"$path"}}}},
+        {"$sample":{"size":1}},
+        {"$sort":{"_id":-1}}
+        ])
+        if data is None:
+            return {'message':1}
+        newData = {}    
+        for i in data:
+          newData = i.get('data')[0]
+        #return {'message':newData}
+
+        scheme = self.request.protocol
+        curReqHost = self.request.host
+        if len(newData)>0:
+           curPath = newData.get('path',0)
+           if curPath is not None:
+              newData['vimg'] = 'https://cdnegc.trafficfactory.biz/banners/ca/b7/62/690ef1cf5721d84f976315e769ac9b4a.jpg'#scheme+'://'+curReqHost+'/pimg/'+str(newData.get('path') )
+           message = 0
+        return {'message':message,'data':newData}
     def __dbInfo(self, tableName):
         getObj = videoDemo();
         dbObj = Dbobj('redio','re_')
         return dbObj.getTbname(tableName)
+
+    def starsList(self,page=1,pageSize=0,ltype=0):
+        _sort = '_id'          
+        page = int(page)
+        arr = [];
+        curTableObj = self.__dbInfo('local_stars')
+        if pageSize > 0:
+           curSize = pageSize
+        else:
+           curSize = self.pageNum 
+        curBegin = (page - 1)*curSize
+        #无搜索分页
+        newData = []
+        data = ''
+        count = 0   
+        tt = 0
+        if ltype == 1:
+          data = curTableObj.find({"country":{'$in':['china','japan','Korea']}}).sort(_sort, pymongo.DESCENDING).limit(curSize).skip(curBegin)
+          tt = 1
+        elif ltype == 2:
+          data = curTableObj.find({"country":'china'}).sort(_sort, pymongo.DESCENDING).limit(curSize).skip(curBegin)
+          tt = 2
+        elif ltype == 3:
+          data = curTableObj.find({"country":'japan'}).sort(_sort, pymongo.DESCENDING).limit(curSize).skip(curBegin)
+          tt = 3
+        else:
+          data = curTableObj.find({"_id":{'$gt': 0}}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin) 
+          tt = 4
+        count = data.count() 
+        scheme = self.request.protocol
+        curReqHost = self.request.host
+        for v in data:              
+            v['vimg'] = scheme+'://'+curReqHost+'/pimg/stars/'+str(v['_id'] )+'.jpg'
+            newData.append(v)        
+        return {'message':0,"data":newData,"count":count,"endPage":self.page(count,page),"ltype":tt}
 
     def list(self,stype,word,page=1,pageSize=0,ltype=0):
         scheme = self.request.protocol
@@ -334,25 +406,25 @@ class Vinfo(tornado.web.RequestHandler):
         # elif stype == 2:
         # #关键词分页
         # elif stype == 3:
-    def page(self,count=1,curPage=1,showPage=36):
+    def page(self,count=1,curPage=1):
         #显示20页
         pageNum = self.pageNum
         if curPage<1:
            curPage = 1
 
         endPage = 1
-        #endPage = curPage + showPage - 1
+        endPage = curPage + self.showPage - 1
         TotalPage = math.ceil(count/pageNum)
-        return TotalPage
-        #if endPage > TotalPage:
-        #   endPage = TotalPage
-        # pageList = []
-        # if curPage>1:
-        #    pageList.append({"title":"首页","val":1})
-        #    pageList.append({"title":"前一页","val":curPage-1})
-        # for i in range(curPage,endPage):
-        #     pageList.append({"title":i,"val":i})
-        # return pageList
+        #return TotalPage
+        if endPage > TotalPage:
+          endPage = TotalPage
+        pageList = []
+        if curPage>1:
+           pageList.append({"title":"首页","val":1})
+           pageList.append({"title":"前一页","val":curPage-1})
+        for i in range(curPage,endPage):
+            pageList.append({"title":i,"val":i})
+        return pageList
 
 
 
