@@ -210,26 +210,26 @@ class Vinfo(tornado.web.RequestHandler):
         newData = []
         data = ''
         count = 0   
-        tt = 0
+        #tt = 0
         if ltype == 1:
           data = curTableObj.find({"country":{'$in':['china','japan','Korea']}}).sort(_sort, pymongo.DESCENDING).limit(curSize).skip(curBegin)
-          tt = 1
+
         elif ltype == 2:
           data = curTableObj.find({"country":'china'}).sort(_sort, pymongo.DESCENDING).limit(curSize).skip(curBegin)
-          tt = 2
+
         elif ltype == 3:
           data = curTableObj.find({"country":'japan'}).sort(_sort, pymongo.DESCENDING).limit(curSize).skip(curBegin)
-          tt = 3
+
         else:
           data = curTableObj.find({"_id":{'$gt': 0}}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin) 
-          tt = 4
+
         count = data.count() 
         scheme = self.request.protocol
         curReqHost = self.request.host
         for v in data:              
             v['vimg'] = scheme+'://'+curReqHost+'/pimg/stars/'+str(v['_id'] )+'.jpg'
             newData.append(v)        
-        return {'message':0,"data":newData,"count":count,"endPage":self.page(count,page),"ltype":tt}
+        return {'message':0,"data":newData,"count":count,"endPage":self.page(count,page)}
 
     def list(self,stype,word,page=1,pageSize=0,ltype=0):
         scheme = self.request.protocol
@@ -422,7 +422,7 @@ class Vinfo(tornado.web.RequestHandler):
         if curPage>1:
            pageList.append({"title":"首页","val":1})
            pageList.append({"title":"前一页","val":curPage-1})
-        for i in range(curPage,endPage):
+        for i in range(curPage,endPage+1):
             pageList.append({"title":i,"val":i})
         return pageList
 
