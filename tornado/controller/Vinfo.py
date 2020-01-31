@@ -83,6 +83,8 @@ class Vinfo(tornado.web.RequestHandler):
             ltype = int(ltype)
             deinfo = self.starsList(self.get_argument('page',1),pageSize,ltype)
         elif _type == 12:
+             if _deviceType == 0:
+                _deviceType = 1
              deinfo = self.adDetail(_deviceType)
         self.finish(deinfo)
       #except:
