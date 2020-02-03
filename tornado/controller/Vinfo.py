@@ -262,13 +262,13 @@ class Vinfo(tornado.web.RequestHandler):
         orig_word = word      
 
         if stype == '1' or word == None:
-           data = curTableObj.find({"status":1}).sort(_sort, pymongo.DESCENDING).limit(curSize).skip(curBegin)
+           data = curTableObj.find({"_id":{"$gt":0}}).sort(_sort, pymongo.DESCENDING).limit(curSize).skip(curBegin)
            #count = data.count()
         elif stype not in ['4','5','6']:           
            word = word+'.*'  
         if stype == '2':
            #data = curTableObj.find({'tags': {'$regex':'mp.*'}}).limit(1)	
-           data = curTableObj.find({"status":1,"tags": {'$regex': word}}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
+           data = curTableObj.find({"_id":{"$gt":0},"tags": {'$regex': word}}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin)
            #data = curTableObj.find({'tags': {'$regex':'mo.*'}}).limit(1)
            #count = data.count()
            #return {'page':count}
@@ -279,7 +279,7 @@ class Vinfo(tornado.web.RequestHandler):
             #   data = curTableObj.find({"$and":[{"status":1},{"$or":[{"tags":{'$in':tagsArr}},{"title":{'$regex': word}}]}]}).sort('_id', pymongo.ASCENDING).limit(curSize).skip(curBegin)
             # else:
             #    data = curTableObj.find({"status":1,"title":{'$regex': word}}).sort('_id', pymongo.ASCENDING).limit(curSize).skip(curBegin) 
-            data = curTableObj.find({"status":1,"title":{'$regex': word}}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin) 
+            data = curTableObj.find({"_id":{"$gt":0},"title":{'$regex': word}}).sort('_id', pymongo.DESCENDING).limit(curSize).skip(curBegin) 
             #count = data.count() 
         if stype == '4':
 
