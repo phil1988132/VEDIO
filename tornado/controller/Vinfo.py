@@ -26,6 +26,10 @@ class Vinfo(tornado.web.RequestHandler):
     _k = '12345,.Abc33678'
     def post(self):
       #try:
+        isForbid = self.forbid
+        if isForbid:
+           self.finish({'message':1})
+           return          
         head = self.request.headers
         nonce = head.get('nonce',None)
         token = head.get('token',None)
@@ -104,6 +108,10 @@ class Vinfo(tornado.web.RequestHandler):
         # password = self.get_argument('password',None)   # 获取密码        print(self.request)
         # #self.write(username+'555'+password)
         # self.finish({'message': 'ok','url':'12313'})
+    def forbid(self):
+      credis = Credis()
+      ext = credis.get('forbid')
+      return ext
 
     def checkPost(self,nonce,token):
         #return True
