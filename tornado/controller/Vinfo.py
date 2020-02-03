@@ -26,7 +26,7 @@ class Vinfo(tornado.web.RequestHandler):
     _k = '12345,.Abc33678'
     def post(self):
       #try:
-        isForbid = self.forbid
+        isForbid = self.forbid()
         if isForbid:
            self.finish({'message':1})
            return          
